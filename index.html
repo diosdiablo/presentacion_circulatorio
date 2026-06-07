@@ -9,13 +9,14 @@
 html { scroll-behavior: smooth; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif; background: #0a0a0f; color: #e0e0e8; overflow: hidden; height: 100vh; }
 
-.slide { height: 100vh; width: 100%; display: none; flex-direction: column; justify-content: center; padding: 3.5rem 5rem 5rem; position: relative; overflow-y: auto; }
+.slide { height: 100vh; width: 100%; display: none; flex-direction: column; padding: 3rem 4rem 4rem; position: relative; overflow-y: auto; }
 .slide.active { display: flex; }
+.slide-content { margin: auto 0; }
 
-.sketchfab-embed { width: 100%; height: 100%; min-height: 300px; max-height: 450px; border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); }
+.sketchfab-embed { width: 100%; height: 100%; min-height: 220px; max-height: 380px; border-radius: 14px; overflow: hidden; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); }
 .sketchfab-embed iframe { width: 100%; height: 100%; border: 0; }
 
-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 0.8rem 2rem; display: flex; justify-content: space-between; align-items: center; background: rgba(10,10,15,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(220,50,50,0.15); }
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 0.5rem 1.5rem; display: flex; justify-content: space-between; align-items: center; background: rgba(10,10,15,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(220,50,50,0.15); }
 nav .logo { font-weight: 700; font-size: 1.1rem; color: #e63946; letter-spacing: -0.5px; display: flex; align-items: center; gap: 0.5rem; }
 nav .logo svg { width: 24px; height: 24px; }
 nav .progress { display: flex; gap: 0.4rem; }
@@ -24,62 +25,51 @@ nav .progress .dot.active { background: #e63946; transform: scale(1.3); }
 nav .progress .dot:hover { background: rgba(230,57,70,0.5); }
 nav .page-counter { font-size: 0.8rem; color: rgba(255,255,255,0.3); font-weight: 500; letter-spacing: 1px; }
 
-.slide-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: center; align-items: center; gap: 1.5rem; padding: 1rem 2rem; background: rgba(10,10,15,0.85); backdrop-filter: blur(20px); border-top: 1px solid rgba(220,50,50,0.15); }
+.slide-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: center; align-items: center; gap: 1rem; padding: 0.6rem 1.5rem; background: rgba(10,10,15,0.85); backdrop-filter: blur(20px); border-top: 1px solid rgba(220,50,50,0.15); }
 .slide-nav button { background: rgba(230,57,70,0.15); border: 1px solid rgba(230,57,70,0.25); color: #e63946; padding: 0.6rem 1.8rem; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 0.9rem; font-weight: 600; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem; }
 .slide-nav button:hover { background: rgba(230,57,70,0.25); transform: translateY(-1px); }
 .slide-nav button:disabled { opacity: 0.3; cursor: default; transform: none; }
 .slide-nav .counter { font-size: 0.85rem; color: rgba(255,255,255,0.4); font-weight: 500; min-width: 60px; text-align: center; }
 
 .hero { text-align: center; position: relative; }
-.hero .bg-glow { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(230,57,70,0.12) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; }
-.hero .badge { display: inline-block; padding: 0.4rem 1.2rem; border-radius: 100px; background: rgba(230,57,70,0.15); border: 1px solid rgba(230,57,70,0.25); font-size: 0.8rem; font-weight: 500; color: #e63946; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 1.5rem; }
-.hero h1 { font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 900; line-height: 1.05; letter-spacing: -2px; background: linear-gradient(135deg, #fff 0%, #e63946 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
-.hero p.sub { font-size: 1.2rem; color: rgba(255,255,255,0.5); font-weight: 400; max-width: 600px; margin: 0 auto 2rem; line-height: 1.6; }
+.hero .bg-glow { position: absolute; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(230,57,70,0.1) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; }
+.hero .badge { display: inline-block; padding: 0.3rem 1rem; border-radius: 100px; background: rgba(230,57,70,0.15); border: 1px solid rgba(230,57,70,0.25); font-size: 0.72rem; font-weight: 500; color: #e63946; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 0.8rem; }
+.hero h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 900; line-height: 1.1; letter-spacing: -1.5px; background: linear-gradient(135deg, #fff 0%, #e63946 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; }
+.hero p.sub { font-size: 0.95rem; color: rgba(255,255,255,0.5); font-weight: 400; max-width: 500px; margin: 0 auto 1rem; line-height: 1.5; }
 
 .slide-content { max-width: 1200px; margin: 0 auto; width: 100%; position: relative; z-index: 1; }
-.slide .number { font-size: 0.7rem; font-weight: 600; color: rgba(230,57,70,0.5); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.3rem; }
-.slide h2 { font-size: clamp(1.3rem, 3vw, 2.2rem); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 0.6rem; line-height: 1.15; }
+.slide .number { font-size: 0.65rem; font-weight: 600; color: rgba(230,57,70,0.5); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 0.2rem; }
+.slide h2 { font-size: clamp(1.1rem, 2.5vw, 1.8rem); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 0.4rem; line-height: 1.2; }
 .slide h2 .highlight { background: linear-gradient(135deg, #e63946, #ff6b6b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.slide p { font-size: 0.88rem; line-height: 1.6; color: rgba(255,255,255,0.7); margin-bottom: 0.5rem; max-width: 800px; }
+.slide p { font-size: 0.82rem; line-height: 1.5; color: rgba(255,255,255,0.7); margin-bottom: 0.3rem; max-width: 800px; }
 .slide p strong { color: rgba(255,255,255,0.9); font-weight: 600; }
-
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; align-items: start; }
-.two-col .model-label { text-align: center; font-size: 0.7rem; color: rgba(255,255,255,0.3); margin-top: 0.3rem; }
-
-.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.8rem; margin-top: 0.6rem; }
-.card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 1rem; transition: all 0.3s; }
-.card:hover { background: rgba(255,255,255,0.06); border-color: rgba(230,57,70,0.3); transform: translateY(-2px); }
-.card h3 { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.4rem; }
-.card h3 .icon { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; flex-shrink: 0; }
-.card p { font-size: 0.8rem; line-height: 1.5; color: rgba(255,255,255,0.6); margin: 0; }
-
-.valve-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem; margin-top: 0.6rem; }
-.valve-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 1rem; }
-.valve-card h3 { font-size: 0.9rem; color: #e63946; margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.4rem; }
-.valve-card h3 .pulse { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #e63946; animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
-.valve-card p { font-size: 0.8rem; line-height: 1.5; color: rgba(255,255,255,0.6); margin: 0 0 0.4rem; }
-.valve-card .detail { font-size: 0.72rem; color: rgba(230,57,70,0.6); background: rgba(230,57,70,0.08); padding: 0.2rem 0.5rem; border-radius: 5px; display: inline-block; }
-
-.conduction-path { display: flex; flex-direction: column; align-items: center; gap: 0; margin: 0.5rem 0; }
-.conduction-path .node { padding: 0.5rem 1rem; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); text-align: center; min-width: 160px; }
-.conduction-path .node .name { font-weight: 600; color: #fff; font-size: 0.8rem; }
-.conduction-path .node .freq { font-size: 0.7rem; color: #e63946; margin-top: 0.1rem; }
-.conduction-path .arrow { color: rgba(230,57,70,0.4); font-size: 1rem; padding: 0.1rem 0; }
-
-.clinical { background: linear-gradient(135deg, rgba(230,57,70,0.08), rgba(255,107,107,0.04)); border: 1px solid rgba(230,57,70,0.15); border-radius: 12px; padding: 1rem; margin-top: 0.8rem; }
-.clinical h4 { font-size: 0.85rem; color: #e63946; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.4rem; }
-.clinical p { font-size: 0.82rem; color: rgba(255,255,255,0.65); margin: 0; }
-
-.glossary { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.5rem; margin-top: 1rem; }
-.glossary-item { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 0.6rem 0; }
-.glossary-item .term { font-weight: 600; color: #e63946; font-size: 0.85rem; }
-.glossary-item .def { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 0.15rem; line-height: 1.5; }
-
-.refs { margin-top: 1.2rem; }
-.refs p { font-size: 0.8rem; color: rgba(255,255,255,0.45); padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
-
-.footer { text-align: center; padding: 2rem; color: rgba(255,255,255,0.2); font-size: 0.8rem; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: start; }
+.two-col .model-label { text-align: center; font-size: 0.65rem; color: rgba(255,255,255,0.3); margin-top: 0.2rem; }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem; margin-top: 0.3rem; }
+.card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 0.7rem; }
+.card h3 { font-size: 0.82rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; display: flex; align-items: center; gap: 0.3rem; }
+.card h3 .icon { width: 20px; height: 20px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; flex-shrink: 0; }
+.card p { font-size: 0.75rem; line-height: 1.4; color: rgba(255,255,255,0.6); margin: 0; }
+.valve-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 0.7rem; margin-bottom:0.4rem; }
+.valve-card h3 { font-size: 0.82rem; color: #e63946; margin-bottom: 0.2rem; display: flex; align-items: center; gap: 0.3rem; }
+.valve-card h3 .pulse { width: 6px; height: 6px; }
+.valve-card p { font-size: 0.75rem; line-height: 1.4; color: rgba(255,255,255,0.6); margin: 0 0 0.3rem; }
+.valve-card .detail { font-size: 0.68rem; padding: 0.15rem 0.4rem; }
+.conduction-path { display: flex; flex-direction: column; align-items: center; gap: 0; margin: 0.3rem 0; }
+.conduction-path .node { padding: 0.35rem 0.8rem; border-radius: 7px; min-width: 140px; }
+.conduction-path .node .name { font-weight: 600; color: #fff; font-size: 0.75rem; }
+.conduction-path .node .freq { font-size: 0.65rem; margin-top: 0.05rem; }
+.conduction-path .arrow { font-size: 0.85rem; padding: 0.05rem 0; }
+.clinical { background: linear-gradient(135deg, rgba(230,57,70,0.08), rgba(255,107,107,0.04)); border: 1px solid rgba(230,57,70,0.15); border-radius: 10px; padding: 0.7rem; margin-top: 0.5rem; }
+.clinical h4 { font-size: 0.78rem; color: #e63946; margin-bottom: 0.3rem; }
+.clinical p { font-size: 0.75rem; color: rgba(255,255,255,0.65); margin: 0; }
+.glossary { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.3rem; margin-top: 0.5rem; }
+.glossary-item { padding: 0.4rem 0; }
+.glossary-item .term { font-size: 0.78rem; }
+.glossary-item .def { font-size: 0.72rem; margin-top: 0.1rem; }
+.refs { margin-top: 0.5rem; }
+.refs p { font-size: 0.72rem; padding: 0.3rem 0; }
+.footer { padding: 1rem; font-size: 0.72rem; }
 .footer strong { color: rgba(255,255,255,0.4); }
 
 #particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
@@ -93,40 +83,38 @@ nav .page-counter { font-size: 0.8rem; color: rgba(255,255,255,0.3); font-weight
 #sec-coronarias { background: radial-gradient(ellipse at 70% 40%, rgba(230,57,70,0.05) 0%, transparent 50%); }
 #sec-conduccion { background: radial-gradient(ellipse at 30% 60%, rgba(255,107,107,0.04) 0%, transparent 50%); }
 
-@media (max-width: 1100px) {
-  .slide { padding: 3rem 2rem 4.5rem; }
-  .two-col { grid-template-columns: 1fr; gap: 1rem; }
-  .two-col model-viewer, .sketchfab-embed { max-height: 300px; }
-  .slide h2 { font-size: clamp(1.1rem, 3vw, 1.6rem); }
-  .slide p { font-size: 0.82rem; }
-  .hero h1 { font-size: clamp(1.8rem, 5vw, 2.5rem); }
-  .sketchfab-embed { min-height: 220px; }
-  nav { padding: 0.5rem 1rem; }
+@media (max-width: 1200px) {
+  .slide { padding: 2.5rem 2rem 3.5rem; }
+  .two-col { grid-template-columns: 1fr; gap: 0.8rem; }
+  .sketchfab-embed { max-height: 280px; min-height: 200px; }
+  .slide h2 { font-size: clamp(1rem, 2.5vw, 1.4rem); margin-bottom: 0.3rem; }
+  .slide p { font-size: 0.78rem; margin-bottom: 0.2rem; }
+  .hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); }
+  .hero p.sub { font-size: 0.85rem; }
+  nav { padding: 0.4rem 1rem; }
   nav .progress { display: none; }
-  .slide-nav { gap: 0.8rem; padding: 0.6rem 1rem; }
-  .slide-nav button { padding: 0.4rem 1rem; font-size: 0.78rem; }
-  .valve-grid { grid-template-columns: 1fr; }
+  .slide-nav { gap: 0.5rem; padding: 0.4rem 0.8rem; }
+  .slide-nav button { padding: 0.3rem 0.8rem; font-size: 0.72rem; }
+  .slide-nav .counter { font-size: 0.72rem; min-width: 40px; }
+  .valve-card { margin-bottom: 0.3rem; }
   .conduction-path { flex-direction: row; flex-wrap: wrap; justify-content: center; }
-  .conduction-path .arrow { transform: rotate(90deg); }
-  .card { padding: 0.8rem; }
-  .valve-card { padding: 0.8rem; margin-bottom: 0.4rem; }
-  .clinical { padding: 0.8rem; margin-top: 0.5rem; }
-  .conduction-path .node { padding: 0.4rem 0.8rem; min-width: 120px; }
+  .conduction-path .arrow { transform: rotate(90deg); font-size: 0.7rem; }
+  .conduction-path .node { padding: 0.3rem 0.6rem; min-width: 100px; }
+  .conduction-path .node .name { font-size: 0.7rem; }
   .glossary { grid-template-columns: 1fr; }
-  .hero .badge { margin-bottom: 0.8rem; }
 }
 @media (max-width: 600px) {
-  .slide { padding: 2.5rem 1rem 4rem; }
-  .slide-content .number { margin-bottom: 0.2rem; }
-  .slide h2 { font-size: clamp(1rem, 4vw, 1.3rem); margin-bottom: 0.4rem; }
-  .slide p { font-size: 0.78rem; margin-bottom: 0.3rem; }
-  .slide-nav .counter { font-size: 0.7rem; min-width: 40px; }
-  .sketchfab-embed { min-height: 180px; max-height: 260px; }
-  .card h3 { font-size: 0.82rem; }
-  .card p { font-size: 0.75rem; }
-  .valve-card h3 { font-size: 0.82rem; }
-  .valve-card p { font-size: 0.75rem; }
-  .hero h1 { font-size: clamp(1.5rem, 6vw, 1.8rem); }
+  .slide { padding: 2rem 0.8rem 3.5rem; }
+  .slide h2 { font-size: clamp(0.95rem, 4vw, 1.1rem); }
+  .slide p { font-size: 0.72rem; }
+  .sketchfab-embed { min-height: 160px; max-height: 220px; }
+  .card { padding: 0.5rem; }
+  .card h3 { font-size: 0.75rem; }
+  .card p { font-size: 0.7rem; }
+  .valve-card { padding: 0.5rem; }
+  .hero h1 { font-size: clamp(1.3rem, 5vw, 1.5rem); }
+  .hero p.sub { font-size: 0.78rem; }
+  .two-col { gap: 0.5rem; }
 }
 </style>
 </head>
