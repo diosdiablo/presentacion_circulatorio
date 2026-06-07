@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema Circulatorio I: El Corazón</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif; background: #0a0a0f; color: #e0e0e8; overflow: hidden; height: 100vh; }
+
+.slide { height: 100vh; width: 100%; display: none; flex-direction: column; justify-content: center; padding: 3.5rem 5rem 5rem; position: relative; overflow-y: auto; }
+.slide.active { display: flex; }
+
+.sketchfab-embed { width: 100%; height: 100%; min-height: 300px; border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); }
+.sketchfab-embed iframe { width: 100%; height: 100%; border: 0; }
+
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 0.8rem 2rem; display: flex; justify-content: space-between; align-items: center; background: rgba(10,10,15,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(220,50,50,0.15); }
+nav .logo { font-weight: 700; font-size: 1.1rem; color: #e63946; letter-spacing: -0.5px; display: flex; align-items: center; gap: 0.5rem; }
+nav .logo svg { width: 24px; height: 24px; }
+nav .progress { display: flex; gap: 0.4rem; }
+nav .progress .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.15); transition: all 0.3s; cursor: pointer; }
+nav .progress .dot.active { background: #e63946; transform: scale(1.3); }
+nav .progress .dot:hover { background: rgba(230,57,70,0.5); }
+nav .page-counter { font-size: 0.8rem; color: rgba(255,255,255,0.3); font-weight: 500; letter-spacing: 1px; }
+
+.slide-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: center; align-items: center; gap: 1.5rem; padding: 1rem 2rem; background: rgba(10,10,15,0.85); backdrop-filter: blur(20px); border-top: 1px solid rgba(220,50,50,0.15); }
+.slide-nav button { background: rgba(230,57,70,0.15); border: 1px solid rgba(230,57,70,0.25); color: #e63946; padding: 0.6rem 1.8rem; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 0.9rem; font-weight: 600; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem; }
+.slide-nav button:hover { background: rgba(230,57,70,0.25); transform: translateY(-1px); }
+.slide-nav button:disabled { opacity: 0.3; cursor: default; transform: none; }
+.slide-nav .counter { font-size: 0.85rem; color: rgba(255,255,255,0.4); font-weight: 500; min-width: 60px; text-align: center; }
+
+.hero { text-align: center; position: relative; }
+.hero .bg-glow { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(230,57,70,0.12) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; }
+.hero .badge { display: inline-block; padding: 0.4rem 1.2rem; border-radius: 100px; background: rgba(230,57,70,0.15); border: 1px solid rgba(230,57,70,0.25); font-size: 0.8rem; font-weight: 500; color: #e63946; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 1.5rem; }
+.hero h1 { font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 900; line-height: 1.05; letter-spacing: -2px; background: linear-gradient(135deg, #fff 0%, #e63946 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+.hero p.sub { font-size: 1.2rem; color: rgba(255,255,255,0.5); font-weight: 400; max-width: 600px; margin: 0 auto 2rem; line-height: 1.6; }
+
+.slide-content { max-width: 1200px; margin: 0 auto; width: 100%; position: relative; z-index: 1; }
+.slide .number { font-size: 0.7rem; font-weight: 600; color: rgba(230,57,70,0.5); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.3rem; }
+.slide h2 { font-size: clamp(1.3rem, 3vw, 2.2rem); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 0.6rem; line-height: 1.15; }
+.slide h2 .highlight { background: linear-gradient(135deg, #e63946, #ff6b6b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.slide p { font-size: 0.88rem; line-height: 1.6; color: rgba(255,255,255,0.7); margin-bottom: 0.5rem; max-width: 800px; }
+.slide p strong { color: rgba(255,255,255,0.9); font-weight: 600; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; align-items: start; }
+.two-col .model-label { text-align: center; font-size: 0.7rem; color: rgba(255,255,255,0.3); margin-top: 0.3rem; }
+
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.8rem; margin-top: 0.6rem; }
+.card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 1rem; transition: all 0.3s; }
+.card:hover { background: rgba(255,255,255,0.06); border-color: rgba(230,57,70,0.3); transform: translateY(-2px); }
+.card h3 { font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.4rem; }
+.card h3 .icon { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; flex-shrink: 0; }
+.card p { font-size: 0.8rem; line-height: 1.5; color: rgba(255,255,255,0.6); margin: 0; }
+
+.valve-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem; margin-top: 0.6rem; }
+.valve-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 1rem; }
+.valve-card h3 { font-size: 0.9rem; color: #e63946; margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.4rem; }
+.valve-card h3 .pulse { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #e63946; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+.valve-card p { font-size: 0.8rem; line-height: 1.5; color: rgba(255,255,255,0.6); margin: 0 0 0.4rem; }
+.valve-card .detail { font-size: 0.72rem; color: rgba(230,57,70,0.6); background: rgba(230,57,70,0.08); padding: 0.2rem 0.5rem; border-radius: 5px; display: inline-block; }
+
+.conduction-path { display: flex; flex-direction: column; align-items: center; gap: 0; margin: 0.5rem 0; }
+.conduction-path .node { padding: 0.5rem 1rem; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); text-align: center; min-width: 160px; }
+.conduction-path .node .name { font-weight: 600; color: #fff; font-size: 0.8rem; }
+.conduction-path .node .freq { font-size: 0.7rem; color: #e63946; margin-top: 0.1rem; }
+.conduction-path .arrow { color: rgba(230,57,70,0.4); font-size: 1rem; padding: 0.1rem 0; }
+
+.clinical { background: linear-gradient(135deg, rgba(230,57,70,0.08), rgba(255,107,107,0.04)); border: 1px solid rgba(230,57,70,0.15); border-radius: 12px; padding: 1rem; margin-top: 0.8rem; }
+.clinical h4 { font-size: 0.85rem; color: #e63946; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.4rem; }
+.clinical p { font-size: 0.82rem; color: rgba(255,255,255,0.65); margin: 0; }
+
+.glossary { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.5rem; margin-top: 1rem; }
+.glossary-item { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 0.6rem 0; }
+.glossary-item .term { font-weight: 600; color: #e63946; font-size: 0.85rem; }
+.glossary-item .def { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 0.15rem; line-height: 1.5; }
+
+.refs { margin-top: 1.2rem; }
+.refs p { font-size: 0.8rem; color: rgba(255,255,255,0.45); padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+
+.footer { text-align: center; padding: 2rem; color: rgba(255,255,255,0.2); font-size: 0.8rem; }
+.footer strong { color: rgba(255,255,255,0.4); }
+
+#particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+#particles span { position: absolute; width: 4px; height: 4px; border-radius: 50%; background: rgba(230,57,70,0.15); animation: float linear infinite; }
+@keyframes float { 0%{transform:translateY(100vh) rotate(0deg);opacity:0} 10%{opacity:1} 90%{opacity:1} 100%{transform:translateY(-10vh) rotate(720deg);opacity:0} }
+
+#sec-general { background: radial-gradient(ellipse at 50% 50%, rgba(230,57,70,0.04) 0%, transparent 50%); }
+#sec-pericardio { background: radial-gradient(ellipse at 20% 50%, rgba(230,57,70,0.05) 0%, transparent 50%); }
+#sec-camaras { background: radial-gradient(ellipse at 80% 30%, rgba(255,107,107,0.04) 0%, transparent 50%); }
+#sec-valvulas { background: radial-gradient(ellipse at 50% 80%, rgba(230,57,70,0.06) 0%, transparent 50%); }
+#sec-coronarias { background: radial-gradient(ellipse at 70% 40%, rgba(230,57,70,0.05) 0%, transparent 50%); }
+#sec-conduccion { background: radial-gradient(ellipse at 30% 60%, rgba(255,107,107,0.04) 0%, transparent 50%); }
+
+@media (max-width: 900px) {
+  .slide { padding: 5rem 1.5rem 7rem; }
+  .two-col { grid-template-columns: 1fr; gap: 1.5rem; }
+  .sketchfab-embed { min-height: 240px; }
+  nav { padding: 0.6rem 1rem; }
+  nav .progress { display: none; }
+  .slide-nav { gap: 0.8rem; padding: 0.7rem 1rem; }
+  .slide-nav button { padding: 0.5rem 1rem; font-size: 0.8rem; }
+  .valve-grid { grid-template-columns: 1fr; }
+  .conduction-path { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+  .conduction-path .arrow { transform: rotate(90deg); }
+}
+</style>
+</head>
+<body>
+
+<div id="particles"></div>
+
+<nav>
+  <div class="logo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    Sistema Circulatorio
+  </div>
+  <div class="progress" id="navProgress"></div>
+  <div class="page-counter" id="pageCounter">1 / 10</div>
+</nav>
+
+<!-- ===== 1. PRESENTACION ===== -->
+<section class="slide hero" id="sec-presentacion">
+  <div class="bg-glow" style="width:800px;height:800px;"></div>
+  <div class="slide-content">
+    <div style="text-align:center;">
+      <div style="display:inline-block;padding:0.4rem 1.2rem;border-radius:100px;background:rgba(230,57,70,0.1);border:1px solid rgba(230,57,70,0.2);font-size:0.8rem;font-weight:500;color:#e63946;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:2rem;">Anatomía y Fisiología · Carrera de Enfermería</div>
+      <h1 style="font-size:clamp(2.5rem,5vw,4rem);font-weight:800;letter-spacing:-1.5px;margin-bottom:0.8rem;line-height:1.15;">Sistema Circulatorio I</h1>
+      <h2 style="font-size:clamp(1.8rem,3.5vw,3rem);font-weight:700;letter-spacing:-1px;background:linear-gradient(135deg,#fff 0%,#e63946 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:2.5rem;">El Corazón</h2>
+      <div style="width:80px;height:3px;background:#e63946;border-radius:2px;margin:0 auto 2rem;"></div>
+      <p style="font-size:1rem;color:rgba(255,255,255,0.4);line-height:1.8;">Anatomía, Grandes Vasos, Riego Sanguíneo y Sistema de Conducción Eléctrica</p>
+      <p style="font-size:0.85rem;color:rgba(255,255,255,0.2);margin-top:2rem;">Junio 2026</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 2. VISTA GENERAL ===== -->
+<section class="slide hero" id="sec-general">
+  <div class="bg-glow"></div>
+  <div class="slide-content">
+    <div class="badge">01 · Anatomía Externa</div>
+    <div class="sketchfab-embed" style="width:380px;height:340px;margin:0 auto 1rem;display:block;">
+      <iframe src="https://sketchfab.com/models/a3f0ea2030214a6bbaa97e7357eebd58/embed?autospin=0.2&autostart=1&preload=1&ui_controls=0&ui_infos=0&ui_stop=0&ui_watermark=0" allow="autoplay; fullscreen; xr-spatial-tracking" title="Vista externa del corazón"></iframe>
+    </div>
+    <h1>Vista General del <span style="background:linear-gradient(135deg,#fff 0%,#e63946 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Corazón</span></h1>
+    <p class="sub">Órgano muscular hueco del tamaño de un puño, situado en el mediastino medio. Bombea sangre a todo el cuerpo a través del sistema circulatorio.</p>
+    <div style="display:flex;gap:2rem;justify-content:center;margin-top:1rem;flex-wrap:wrap;">
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:0.8rem 1.5rem;"><span style="color:#e63946;font-weight:700;">250-350 g</span><br><span style="font-size:0.75rem;color:rgba(255,255,255,0.4);">Peso promedio</span></div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:0.8rem 1.5rem;"><span style="color:#e63946;font-weight:700;">100.000 × /día</span><br><span style="font-size:0.75rem;color:rgba(255,255,255,0.4);">Latidos</span></div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:0.8rem 1.5rem;"><span style="color:#e63946;font-weight:700;">5 L/min</span><br><span style="font-size:0.75rem;color:rgba(255,255,255,0.4);">Gasto cardíaco</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 3. PERICARDIO Y PARED ===== -->
+<section class="slide" id="sec-pericardio">
+  <div class="slide-content">
+    <div class="number">02 · Pericardio y Pared Cardíaca</div>
+    <div class="two-col" style="align-items:center;">
+      <div>
+        <h2>Estructura del <span class="highlight">Pericardio</span></h2>
+        <p>Saco fibroseroso que envuelve al corazón en el <strong>mediastino medio</strong>.</p>
+        <div class="card-grid" style="grid-template-columns:1fr;">
+          <div class="card">
+            <h3><span class="icon" style="background:rgba(230,57,70,0.15);color:#e63946;">F</span> Pericardio Fibroso</h3>
+            <p>Capa externa de tejido conjuntivo denso. Se fija al diafragma, esternón y estructuras mediastínicas.</p>
+          </div>
+          <div class="card">
+            <h3><span class="icon" style="background:rgba(255,107,107,0.15);color:#ff6b6b;">S</span> Pericardio Seroso</h3>
+            <p>Dos hojas: <strong>parietal</strong> y <strong>visceral</strong> (epicardio). Cavidad pericárdica con 15-50 ml de líquido lubricante.</p>
+          </div>
+        </div>
+        <h2 style="margin-top:0.8rem;font-size:clamp(1.1rem,2vw,1.5rem);">Las <span class="highlight">Tres Capas</span> de la Pared</h2>
+        <ul style="list-style:none;">
+          <li style="padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);"><strong style="color:#ff6b6b;">Epicardio</strong> — <span style="color:rgba(255,255,255,0.6);font-size:0.9rem;">Capa externa. Contiene vasos coronarios y tejido adiposo.</span></li>
+          <li style="padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);"><strong style="color:#fff;">Miocardio</strong> — <span style="color:rgba(255,255,255,0.6);font-size:0.9rem;">Capa muscular media. Fibras estriadas cardíacas. Más grueso en el VI (15 mm).</span></li>
+          <li style="padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);"><strong style="color:#ff8fa0;">Endocardio</strong> — <span style="color:rgba(255,255,255,0.6);font-size:0.9rem;">Capa interna endotelial. Tapiza cavidades y recubre válvulas.</span></li>
+        </ul>
+        <div class="clinical">
+          <h4>🩺 Aplicación Clínica</h4>
+          <p>La <strong>pericarditis</strong> produce dolor torácico que se alivia al inclinarse hacia adelante. El <strong>derrame pericárdico</strong> puede provocar taponamiento cardíaco: <strong>tríada de Beck</strong> (hipotensión, ingurgitación yugular, ruidos velados).</p>
+        </div>
+      </div>
+      <div>
+        <div class="sketchfab-embed" style="height:400px;">
+          <iframe src="https://sketchfab.com/models/a3f0ea2030214a6bbaa97e7357eebd58/embed?autospin=0.2&autostart=1&preload=1&ui_controls=0&ui_infos=0&ui_stop=0&ui_watermark=0&camera_orbit=-30deg,70deg,2.5m" allow="autoplay; fullscreen; xr-spatial-tracking" title="Pericardio y pared cardíaca"></iframe>
+        </div>
+        <div class="model-label">Vista anterolateral · Cortesía de HannahNewey (Sketchfab, CC BY-NC-SA)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 4. CÁMARAS ===== -->
+<section class="slide" id="sec-camaras">
+  <div class="slide-content">
+    <div class="number">03 · Cavidades Cardíacas</div>
+    <h2>Las <span class="highlight">Cuatro Cámaras</span> del Corazón</h2>
+    <p>El corazón posee <strong>dos aurículas</strong> (recepción) y <strong>dos ventrículos</strong> (eyección). Separadas por los tabiques interauricular e interventricular.</p>
+    <div class="two-col" style="margin-top:0.5rem;">
+      <div>
+        <div class="card" style="margin-bottom:0.5rem;">
+          <h3><span class="icon" style="background:rgba(100,100,180,0.2);color:#8888cc;">A</span> Aurícula Derecha (AD)</h3>
+          <p>Recibe sangre venosa de la <strong>VCS</strong>, <strong>VCI</strong> y <strong>seno coronario</strong>. Alberga el <strong>nódulo SA</strong>.</p>
+        </div>
+        <div class="card" style="margin-bottom:0.5rem;">
+          <h3><span class="icon" style="background:rgba(180,100,100,0.2);color:#cc8888;">A</span> Aurícula Izquierda (AI)</h3>
+          <p>Recibe sangre oxigenada de las <strong>cuatro venas pulmonares</strong>. Forma la <strong>base del corazón</strong>.</p>
+        </div>
+        <div class="card" style="margin-bottom:0.5rem;">
+          <h3><span class="icon" style="background:rgba(230,57,70,0.2);color:#e63946;">V</span> Ventrículo Derecho (VD)</h3>
+          <p>Pared de 3-5 mm. Bombea sangre a los pulmones vía <strong>tronco pulmonar</strong>.</p>
+        </div>
+        <div class="card">
+          <h3><span class="icon" style="background:rgba(200,40,40,0.2);color:#e63946;">V</span> Ventrículo Izquierdo (VI)</h3>
+          <p>Pared <strong>12-15 mm</strong>. Bombea sangre a la <strong>aorta</strong>. Forma el <strong>ápex</strong> cardíaco.</p>
+        </div>
+        <div class="clinical" style="margin-top:0.6rem;">
+          <h4>🩺 Diferencia Clave</h4>
+          <p>El VI tiene pared <strong>3-4 veces más gruesa</strong> que el VD porque debe vencer la resistencia sistémica total.</p>
+        </div>
+      </div>
+      <div>
+        <div class="sketchfab-embed" style="height:420px;">
+          <iframe src="https://sketchfab.com/models/21d346f72230432e8ed5fe448b03cca5/embed?autospin=0.2&autostart=1&preload=1&ui_controls=0&ui_infos=0&ui_stop=0&ui_watermark=0" allow="autoplay; fullscreen; xr-spatial-tracking" title="Cavidades cardíacas"></iframe>
+        </div>
+        <div class="model-label">Corte con estructura interna visible · Cortesía de Haiqa Arif (Sketchfab, CC BY)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 5. VÁLVULAS ===== -->
+<section class="slide" id="sec-valvulas">
+  <div class="slide-content">
+    <div class="number">04 · Válvulas Cardíacas</div>
+    <h2>Las <span class="highlight">Cuatro Válvulas</span> del Corazón</h2>
+    <p>Garantizan el flujo unidireccional. <strong>Auriculoventriculares</strong> (tricúspide, mitral) y <strong>semilunares</strong> (pulmonar, aórtica).</p>
+    <div class="two-col" style="margin-top:0.5rem;align-items:center;">
+      <div>
+        <div class="valve-card" style="margin-bottom:0.5rem;">
+          <h3><span class="pulse"></span> Válvula Tricúspide</h3>
+          <p>Tres valvas (anterior, posterior, septal). Entre AD y VD. Cuerdas tendinosas evitan prolapso.</p>
+          <span class="detail">Foco: 4º EIC izquierdo, línea paraesternal</span>
+        </div>
+        <div class="valve-card" style="margin-bottom:0.5rem;">
+          <h3><span class="pulse"></span> Válvula Mitral (Bicúspide)</h3>
+          <p>Dos valvas (anterior, posterior). Entre AI y VI. Su cierre produce el <strong>S1</strong>.</p>
+          <span class="detail">Foco: 5º EIC izquierdo, línea medioclavicular</span>
+        </div>
+        <div class="valve-card" style="margin-bottom:0.5rem;">
+          <h3><span class="pulse"></span> Válvula Pulmonar</h3>
+          <p>Tres valvas semilunares. Entre VD y arteria pulmonar.</p>
+          <span class="detail">Foco: 2º EIC izquierdo</span>
+        </div>
+        <div class="valve-card">
+          <h3><span class="pulse"></span> Válvula Aórtica</h3>
+          <p>Tres valvas semilunares. Entre VI y aorta. Su cierre genera el <strong>S2</strong>. De los senos aórticos nacen las coronarias.</p>
+          <span class="detail">Foco: 2º EIC derecho</span>
+        </div>
+      </div>
+      <div>
+        <div class="sketchfab-embed" style="height:400px;">
+          <iframe src="https://sketchfab.com/models/f5fa1e719f3d4f28a7c31728a86a9b42/embed?autospin=0.2&autostart=1&preload=1&ui_controls=0&ui_infos=0&ui_stop=0&ui_watermark=0" allow="autoplay; fullscreen; xr-spatial-tracking" title="Válvulas cardíacas"></iframe>
+        </div>
+        <div class="model-label">Válvulas AV y Semilunares · Cortesía de 3D EduTex (Sketchfab, CC BY)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 6. CORONARIAS ===== -->
+<section class="slide" id="sec-coronarias">
+  <div class="slide-content">
+    <div class="number">05 · Circulación Coronaria</div>
+    <h2>Riego Sanguíneo del <span class="highlight">Miocardio</span></h2>
+    <p>El corazón tiene su propio sistema vascular: las <strong>arterias coronarias</strong>. No extrae oxígeno de la sangre intracavitaria.</p>
+    <div class="two-col" style="margin-top:0.5rem;">
+      <div>
+        <div class="card" style="margin-bottom:0.5rem;">
+          <h3><span class="icon" style="background:rgba(230,57,70,0.15);color:#e63946;">←</span> Arteria Coronaria Izquierda (ACI)</h3>
+          <p><strong>Descendente anterior</strong> (pared anterior VI, ⅔ tabique) y <strong>circunfleja</strong> (pared lateral y posterior del VI).</p>
+        </div>
+        <div class="card" style="margin-bottom:0.5rem;">
+          <h3><span class="icon" style="background:rgba(255,107,107,0.15);color:#ff6b6b;">→</span> Arteria Coronaria Derecha (ACD)</h3>
+          <p>Irriga AD, VD y porción posterior del tabique. En el <strong>70%</strong> (dominancia derecha) irriga la cara inferior del VI.</p>
+        </div>
+        <div class="card">
+          <h3><span class="icon" style="background:rgba(220,50,50,0.15);color:#dc3232;">V</span> Drenaje Venoso</h3>
+          <p>Venas cardíacas → <strong>seno coronario</strong> → AD. Venas: cardíaca magna, media y menor.</p>
+        </div>
+        <div class="clinical">
+          <h4>🩺 Infarto Agudo de Miocardio</h4>
+          <p>La oclusión aguda de una coronaria produce isquemia. La localización determina las alteraciones del ST en el ECG.</p>
+        </div>
+      </div>
+      <div>
+        <div class="sketchfab-embed" style="height:360px;">
+          <iframe src="https://sketchfab.com/models/00b5f4ec0b984325b453f8df07cd0cb5/embed?autospin=0.2&autostart=1&preload=1&ui_controls=0&ui_infos=0&ui_stop=0&ui_watermark=0" allow="autoplay; fullscreen; xr-spatial-tracking" title="Arterias coronarias"></iframe>
+        </div>
+        <div class="model-label">Circulación coronaria · Cortesía de HannahNewey (Sketchfab, CC BY-NC-SA)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 7. CONDUCCION ===== -->
+<section class="slide" id="sec-conduccion">
+  <div class="slide-content">
+    <div class="number">06 · Sistema de Conducción Eléctrica</div>
+    <h2>El <span class="highlight">Sistema Eléctrico</span> del Corazón</h2>
+    <p>El corazón posee <strong>automatismo</strong>: genera sus propios impulsos eléctricos. Células marcapasos especializadas inician y propagan el potencial de acción.</p>
+    <div class="two-col">
+      <div>
+        <div class="conduction-path">
+          <div class="node"><div class="name">Nódulo Sinoauricular (SA)</div><div class="freq">60-100 lpm</div></div>
+          <div class="arrow">↓</div>
+          <div class="node"><div class="name">Nódulo Auriculoventricular (AV)</div><div class="freq">40-60 lpm</div><div style="font-size:0.7rem;color:rgba(255,255,255,0.3);margin-top:0.2rem;">Retraso ~0.1 s</div></div>
+          <div class="arrow">↓</div>
+          <div class="node"><div class="name">Haz de His</div><div class="freq">—</div></div>
+          <div class="arrow">↓</div>
+          <div class="node"><div class="name">Ramas Dcha. e Izqda.</div><div class="freq">—</div></div>
+          <div class="arrow">↓</div>
+          <div class="node"><div class="name">Fibras de Purkinje</div><div class="freq">20-40 lpm</div><div style="font-size:0.7rem;color:rgba(255,255,255,0.3);margin-top:0.2rem;">Ápex → Base</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="sketchfab-embed" style="height:380px;">
+          <iframe src="https://sketchfab.com/models/f314c85abb6a481592ffa5dd973ca0c0/embed?autospin=0.2&autostart=1&preload=1&ui_controls=0&ui_infos=0&ui_stop=0&ui_watermark=0" allow="autoplay; fullscreen; xr-spatial-tracking" title="Sistema de conducción"></iframe>
+        <div class="model-label">Sistema de conducción · Cortesía de E-learning UMCG (Sketchfab, CC BY-NC-SA)</div>
+        <div class="clinical" style="margin-top:0.6rem;">
+          <h4>⚡ Automatismo Cardíaco</h4>
+          <p>El nódulo SA (60-100 lpm) es el marcapasos natural. Si falla, el nódulo AV (40-60 lpm) toma el control. Las fibras de Purkinje (20-40 lpm) son el marcapasos de rescate.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 8. GLOSARIO ===== -->
+<section class="slide" id="sec-glosario">
+  <div class="slide-content">
+    <div class="number">07 · Glosario</div>
+    <h2>Glosario de <span class="highlight">Términos</span></h2>
+    <div class="glossary">
+      <div class="glossary-item"><div class="term">Discos intercalares</div><div class="def">Complejos de unión entre fibras cardíacas con desmosomas y uniones gap.</div></div>
+      <div class="glossary-item"><div class="term">Endocardio</div><div class="def">Capa más interna de la pared cardíaca (endotelio). Tapiza cavidades y válvulas.</div></div>
+      <div class="glossary-item"><div class="term">Epicardio</div><div class="def">Hoja visceral del pericardio seroso. Contiene vasos coronarios epicárdicos.</div></div>
+      <div class="glossary-item"><div class="term">Focos de auscultación</div><div class="def">Puntos torácicos donde los ruidos valvulares se escuchan con mayor nitidez.</div></div>
+      <div class="glossary-item"><div class="term">Miocardio</div><div class="def">Capa muscular media. Fibras estriadas cardíacas. Automatismo intrínseco.</div></div>
+      <div class="glossary-item"><div class="term">Seno coronario</div><div class="def">Conducto venoso que drena la sangre del miocardio en la aurícula derecha.</div></div>
+      <div class="glossary-item"><div class="term">Sincitio eléctrico</div><div class="def">Propiedad del miocardio de funcionar como unidad eléctrica continua.</div></div>
+      <div class="glossary-item"><div class="term">Tríada de Beck</div><div class="def">Hipotensión, ingurgitación yugular y ruidos velados. Taponamiento cardíaco.</div></div>
+    </div>
+    <h3 style="margin-top:1.5rem;font-size:1rem;color:#fff;">Referencias</h3>
+    <div class="refs">
+      <p>Jarvis, C. (2020). <em>Physical examination and health assessment</em> (8ª ed.). Elsevier.</p>
+      <p>Moore, K. L., Dalley, A. F. y Agur, A. M. R. (2019). <em>Anatomía con orientación clínica</em> (8ª ed.). Wolters Kluwer.</p>
+      <p>Netter, F. H. (2019). <em>Atlas of human anatomy</em> (7ª ed.). Elsevier.</p>
+      <p>Tortora, G. J. y Derrickson, B. (2018). <em>Principios de anatomía y fisiología</em> (15ª ed.). Editorial Médica Panamericana.</p>
+    </div>
+    <div class="footer">Sistema Circulatorio I: El Corazón · Anatomía y Fisiología · Enfermería · <strong>Junio 2026</strong></div>
+  </div>
+</section>
+
+<!-- ===== 9. CONCLUSIONES ===== -->
+<section class="slide hero" id="sec-conclusiones">
+  <div class="bg-glow" style="width:700px;height:700px;"></div>
+  <div class="slide-content" style="text-align:center;max-width:900px;">
+    <div class="badge" style="margin-bottom:2rem;">Conclusiones</div>
+    <h1 style="font-size:clamp(2rem,4vw,3rem);font-weight:800;letter-spacing:-1px;margin-bottom:2rem;">Conclusiones</h1>
+    <div style="display:flex;flex-direction:column;gap:1rem;text-align:left;">
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:1.2rem 1.5rem;display:flex;align-items:flex-start;gap:1rem;">
+        <span style="background:rgba(230,57,70,0.15);color:#e63946;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">1</span>
+        <div><strong style="color:#fff;">Estructura de tres capas</strong><br><span style="color:rgba(255,255,255,0.6);font-size:0.9rem;">Epicardio, miocardio y endocardio. El pericardio envuelve y protege al corazón en el mediastino medio.</span></div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:1.2rem 1.5rem;display:flex;align-items:flex-start;gap:1rem;">
+        <span style="background:rgba(230,57,70,0.15);color:#e63946;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">2</span>
+        <div><strong style="color:#fff;">Cuatro cámaras, dos circuitos</strong><br><span style="color:rgba(255,255,255,0.6);font-size:0.9rem;">Aurículas reciben, ventrículos eyectan. Circulación mayor (VI → aorta) y menor (VD → pulmones).</span></div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:1.2rem 1.5rem;display:flex;align-items:flex-start;gap:1rem;">
+        <span style="background:rgba(230,57,70,0.15);color:#e63946;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">3</span>
+        <div><strong style="color:#fff;">Válvulas garantizan flujo unidireccional</strong><br><span style="color:rgba(255,255,255,0.6);font-size:0.9rem;">AV (tricúspide, mitral) y semilunares (pulmonar, aórtica). Su correcto funcionamiento evita regurgitaciones.</span></div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:1.2rem 1.5rem;display:flex;align-items:flex-start;gap:1rem;">
+        <span style="background:rgba(230,57,70,0.15);color:#e63946;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">4</span>
+        <div><strong style="color:#fff;">Riego coronario propio</strong><br><span style="color:rgba(255,255,255,0.6);font-size:0.9rem;">ACI y ACD irrigan el miocardio. Su oclusión causa IAM. El seno coronario drena la sangre venosa.</span></div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:1.2rem 1.5rem;display:flex;align-items:flex-start;gap:1rem;">
+        <span style="background:rgba(230,57,70,0.15);color:#e63946;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">5</span>
+        <div><strong style="color:#fff;">Automatismo cardíaco</strong><br><span style="color:rgba(255,255,255,0.6);font-size:0.9rem;">El nódulo SA genera el impulso. La onda se propaga: AV → Haz de His → Purkinje. El corazón late por sí mismo.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 10. GRACIAS ===== -->
+<section class="slide hero" id="sec-gracias" style="background:radial-gradient(ellipse at 50% 50%, rgba(230,57,70,0.08) 0%, transparent 60%);">
+  <div class="bg-glow" style="width:800px;height:800px;"></div>
+  <div class="slide-content" style="text-align:center;">
+    <h1 style="font-size:clamp(3.5rem,7vw,6rem);font-weight:900;letter-spacing:-3px;background:linear-gradient(135deg,#fff 0%,#e63946 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1.5rem;">Muchas Gracias</h1>
+    <p style="font-size:1.3rem;color:rgba(255,255,255,0.5);max-width:600px;margin:0 auto 1.5rem;line-height:1.6;">Sistema Circulatorio I: El Corazón<br>Anatomía y Fisiología · Carrera de Enfermería</p>
+    <div style="width:60px;height:3px;background:#e63946;border-radius:2px;margin:0 auto 1.5rem;"></div>
+    <p style="font-size:0.9rem;color:rgba(255,255,255,0.25);">Junio 2026</p>
+  </div>
+</section>
+
+<div class="slide-nav" id="slideNav">
+  <button id="prevBtn" disabled>← Anterior</button>
+  <span class="counter" id="slideCounter">1 / 10</span>
+  <button id="nextBtn">Siguiente →</button>
+</div>
+
+<script>
+(function(){
+  var sections = document.querySelectorAll('.slide');
+  var total = sections.length;
+  var current = 0;
+
+  var navDots = document.getElementById('navProgress');
+  var pageCounter = document.getElementById('pageCounter');
+  var slideCounter = document.getElementById('slideCounter');
+  var prevBtn = document.getElementById('prevBtn');
+  var nextBtn = document.getElementById('nextBtn');
+
+  var container = document.getElementById('particles');
+  for(var i = 0; i < 40; i++) {
+    var s = document.createElement('span');
+    s.style.left = Math.random() * 100 + '%';
+    s.style.width = s.style.height = (2 + Math.random() * 4) + 'px';
+    s.style.animationDuration = (15 + Math.random() * 25) + 's';
+    s.style.animationDelay = (Math.random() * 20) + 's';
+    s.style.opacity = 0.1 + Math.random() * 0.3;
+    container.appendChild(s);
+  }
+
+  var dots = [];
+  sections.forEach(function(_, i) {
+    var dot = document.createElement('div');
+    dot.className = 'dot';
+    dot.addEventListener('click', function() { goTo(i); });
+    navDots.appendChild(dot);
+    dots.push(dot);
+  });
+
+  function revealElements() {
+    sections[current].querySelectorAll('.card, .valve-card, .conduction-path .node').forEach(function(el, i) {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'all 0.5s ease';
+      setTimeout(function() {
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      }, i * 80);
+    });
+  }
+
+  function goTo(idx) {
+    if (idx < 0 || idx >= total || idx === current) return;
+    sections[current].classList.remove('active');
+    current = idx;
+    sections[current].classList.add('active');
+    dots.forEach(function(d, i) { d.classList.toggle('active', i === current); });
+    var label = (current + 1) + ' / ' + total;
+    pageCounter.textContent = label;
+    slideCounter.textContent = label;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+    revealElements();
+    sections[current].scrollTop = 0;
+  }
+
+  function nextSlide() { goTo(current + 1); }
+  function prevSlide() { goTo(current - 1); }
+
+  prevBtn.addEventListener('click', prevSlide);
+  nextBtn.addEventListener('click', nextSlide);
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); nextSlide(); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevSlide(); }
+  });
+
+  sections[0].classList.add('active');
+  revealElements();
+  dots[0].classList.add('active');
+})();
+</script>
+</body>
+</html>
